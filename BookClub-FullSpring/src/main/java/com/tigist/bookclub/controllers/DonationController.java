@@ -1,3 +1,6 @@
+/**
+ * This is a Spring MVC controller class for handling CRUD operations for Donation objects.
+ */
 package com.tigist.bookclub.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;

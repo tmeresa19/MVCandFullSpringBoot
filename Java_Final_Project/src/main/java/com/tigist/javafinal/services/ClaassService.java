@@ -1,3 +1,7 @@
+/**
+ * The ClaassService class contains methods for CRUD operations on the Claass model using the
+ * ClaassRepository.
+ */
 package com.tigist.javafinal.services;
 
 

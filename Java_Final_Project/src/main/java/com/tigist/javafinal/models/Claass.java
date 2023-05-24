@@ -1,3 +1,7 @@
+/**
+ * This is a Java class representing a model for a class, with various attributes such as name,
+ * instructor, description, and price, as well as relationships with other classes.
+ */
 package com.tigist.javafinal.models;
 
 
