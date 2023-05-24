@@ -1,0 +1,39 @@
+package com.tigist.loginregistration.services;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+
+import com.tigist.loginregistration.models.LoginUser;
+import com.tigist.loginregistration.models.User;
+import com.tigist.loginregistration.repositories.UserRepository;
+
+@Service
+public class UserService {
+	@Autowired
+	private UserRepository userRepo;
+	
+	public User register(User newUser, BindingResult result) {
+		//find user in the db(userRepo) by email
+		Optional<User> optionalUser = userRepo.findByEmail(newUser.getEmail());
+		if(optionalUser.isPresent()) {
+			result.rejectValue("email", "unique", "Email already exist");
+		}
+		if(!newUser.getPassword().equals(newUser.getConfirm())) {
+			result.rejectValue("confirm", "matches", "Password and Confirm Password doesn't match");
+		}
+		if(result.hasErrors()) { 
+			return null; //if it has errors, then returns null and leaves this function and goes to the controller specifically to the processRegister routing method and display the errors on the form
+		}
+		
+		return null;
+	}
+	
+	public User login(LoginUser newLogin, BindingResult result) {
+		
+		return null;
+	}
+
+}

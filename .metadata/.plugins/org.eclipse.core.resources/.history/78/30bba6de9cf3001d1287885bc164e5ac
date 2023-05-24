@@ -1,0 +1,5 @@
+package com.tigist.bookclub.models;
+
+public class Donation {
+
+}

@@ -1,0 +1,91 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- c:out ; c:forEach etc. --> 
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<!-- Formatting (dates) --> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"  %>
+<!-- form:form -->
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<!-- for rendering errors on PUT routes -->
+<%@ page isErrorPage="true" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Donation Page</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/main.css"> <!-- change to match your file/naming structure -->
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/app.js"></script><!-- change to match your file/naming structure -->
+</head>
+<body>
+	<div class="container mt-5">
+	
+		<p>Welcome, <c:out value="${userName}" /> </p>
+		
+	<!-- ===========================================CREATE LINK=============================================================== -->
+	
+		<div>
+			<a href="/donations/new">Create a new donation</a>
+		</div>
+		
+	<!-- ===========================================LOGOUT============================================================== -->
+	
+		<div>
+			<a href="/logout">Logout</a>
+		</div>
+		
+		<h1>Donation Board</h1>
+		
+		<table class="table table-striped table-dark">
+		<thead>
+			<tr>
+				<th scope="col">ID</th>
+				<th scope="col">Donation Name</th>
+				<th scope="col">Donor</th>
+				<th scope="col">Quantity</th>
+				<th colspan = "2">Actions</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+	<!-- ===========================================ITERATE THRU LIST OF DONATIONS====================================================================== -->
+			
+			<c:forEach var="eachDonation" items="${donationList }">
+				<tr>
+					<td> <c:out value="${eachDonation.id }" /> </td>
+					<td> <a href="/donations/${eachDonation.id }"><c:out value="${eachDonation.donationName }" /></a> </td>
+					<td> <c:out value="${eachDonation.donor.userName }" /> </td>
+					<td> <c:out value="${eachDonation.quantity }" /> </td>	
+					
+	<!-- ========================================CONDITIONAL RENDERING======================================================= -->	
+	
+					<c:choose>
+						<c:when test="${eachDonation.donor.id == userId}"> <!-- if the person who logged in is the donation donor  -->
+												
+	<!-- ===============================================EDIT======================================================================== -->												
+								<td> 
+									<a href="/donations/edit/${eachDonation.id }">Edit</a> 
+								</td> 
+								
+	<!-- ===========================================DELETE ==================================================================== -->
+				                <td>
+									<form action="/donations/${eachDonation.id }" method="POST">
+										<input type="hidden" name="_method" value="DELETE" /> 
+										<button type="submit" class="btn btn-danger">Delete</button>
+									</form>
+								</td>
+						</c:when>
+					
+						<c:otherwise>
+							<td></td>
+							<td></td>
+						</c:otherwise>
+						
+					</c:choose>
+				</tr>						
+			</c:forEach>
+		</tbody>
+	</table>
+	</div>
+</body>
+</html>

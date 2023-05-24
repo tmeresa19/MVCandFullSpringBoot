@@ -1,0 +1,5 @@
+package com.tigist.javafinal.repositories;
+
+public interface ClaassRepository {
+
+}

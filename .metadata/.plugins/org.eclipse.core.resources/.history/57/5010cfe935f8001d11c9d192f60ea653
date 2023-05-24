@@ -1,0 +1,147 @@
+package com.tigist.bookclub.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+
+import com.tigist.bookclub.models.Book;
+import com.tigist.bookclub.models.User;
+import com.tigist.bookclub.services.BookService;
+
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
+@Controller
+public class BookController {
+
+	@Autowired
+	private BookService bookService;
+	
+	@Autowiired
+	private UserService userService;
+	
+	
+    //===================================RENDER CREATE FORM============================================//
+
+	@GetMapping("/books/new")
+	public String renderCreateBookForm(@ModelAttribute("newBook") Book newBook) {
+		return "createBook.jsp";
+	}
+	
+	//================================PROCESS CREATE=================================================//
+	
+	@PostMapping("/books/new")
+	public String processCreateBook(@Valid @ModelAttribute("newBook") Book newBook, BindingResult result, HttpSession session) {
+		Long userId = (Long) session.getAttribute("userId");
+		User loggedInUser = userService.findUser(userId);
+		if(result.hasErrors()) {
+			return "createBook.jsp";
+		}else {
+			bookService.createBook(newBook);
+			return "redirect:/books";
+		}
+	}
+	
+	//=================================DISPLAY DASHBOARD FOR DONATIONS=================================//
+	
+	@GetMapping("/books")
+	public String dashboard(HttpSession session, Model model) {
+		if(session.getAttribute("userId") == null){ //helps to check after logging out, if the user's session is indeed cleared or can access the dashboard.
+			return "redirect:/";
+		}
+		model.addAttribute("bookList", bookService.allBooks());
+		return "dashboard.jsp"; //if the user's id is found in the session(for the purpose of route protection), then display the dashboard/give access to resources
+	}
+	
+	//==================================DETAILS --DISPLAY BY ID=========================================//
+	
+	@GetMapping("/books/{id}")
+	public String bookDetails(@PathVariable("id")Long id, Model model) {
+		model.addAttribute("oneBook", bookService.findOne(id));
+		return "bookDetails.jsp";
+	}
+	
+	//===================================RENDER EDIT FORM================================================//
+	
+	@GetMapping("/books/edit/{id}")
+	public String renderEditBookForm(@PathVariable("id")Long id, Model model) {
+		model.addAttribute("oneBook", bookService.findOne(id));
+		return "updateBook.jsp";	
+	}
+	
+	
+	//==================================PROCESS EDIT AND SAVE TO DB=======================================//	
+	
+	@PutMapping("/books/edit/{id}")
+	public String processEditBook(
+			@Valid @ModelAttribute("oneBook")Book oneBook, 
+			BindingResult result, Model model, @PathVariable("id")Long id) {
+	
+		if(result.hasErrors()) {
+			return "updateBook.jsp"; //go back to the same edit page
+		}else {
+			oneBook.setId(id);
+			bookService.updateBook(oneBook);
+			return "redirect:/books";
+	
+		}
+   }
+	
+	//===========================DELETE===============================================================//
+	
+	@DeleteMapping("/books/{id}")
+	public String deleteBook(@PathVariable("id")Long id) {
+		bookService.removeBook(id);
+		return "redirect:/books";
+	}
+	
+}
+
+
+
+//	@GetMapping("/books/edit/{id}")
+//	public String renderEditBookForm(@PathVariable("id")Long id, Model model, HttpSession session) {
+//		Book oneBook = bookService.findOne(id);
+//		if(!oneBook.getDonor().getId().equals(session.getAttribute("userId")) ) {
+//			return "redirect:/books";
+//		}
+//		model.addAttribute("oneBook", bookService.findOne(id));
+//		return "updateBook.jsp";	
+//	}
+	
+//	//==================================PROCESS EDIT AND SAVE TO DB=======================================//	
+//		
+//		@PutMapping("/books/edit/{id}")
+//		public String processEditBookForm(
+//				@Valid @ModelAttribute("oneBook")Book oneBook, 
+//				BindingResult result, Model model) {
+//		
+//			if(result.hasErrors()) {
+//				return "updateBook.jsp"; //go back to the same edit page
+//			}else {
+//				bookService.updateBook(oneBook);
+//				return "redirect:/books";
+//			
+//			}
+//		}
+
+
+						//Spring MVC thru DataBinding makes it easy to collect all the form inputs and automatically bundle it into an object 
+						//since behind the scene the expense is bound to the jsp thru the view model(by view model, we don't have to manually create the expense like: 
+						//Expense newExpense = new Expense(id, expenseName, donor, ....) THe below line is enough to create it
+						
+						//After editing, if I want to go to the details page of whatever I updated/edited instead of redirecting to the /books page, 
+						//then, I need to use the id during the redirect like below line of code since I already used the @PathVariable("id"):
+
+	// return "redirect:/books/{id}";
+
+
+
+

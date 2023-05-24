@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="true"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<item key="selection" value="Time format should be HH:mm AM/PM"/>
+		<list key="findhistory">
+			<item value="Time format should be HH:mm AM/PM"/>
+			<item value="donor"/>
+			<item value="donation"/>
+			<item value="Donation"/>
+			<item value="Donor"/>
+			<item value="Claass"/>
+			<item value="book"/>
+			<item value="Book"/>
+			<item value="Expense"/>
+			<item value="expense"/>
+			<item value="description"/>
+			<item value="vendor"/>
+			<item value="Vendor"/>
+			<item value="donations"/>
+		</list>
+		<list key="replacehistory">
+			<item value="claass"/>
+			<item value="Claass"/>
+			<item value="instructor"/>
+			<item value="Instructor"/>
+			<item value=""/>
+			<item value="name"/>
+			<item value="exam"/>
+			<item value="Exam"/>
+			<item value="author"/>
+			<item value="Author"/>
+			<item value="donation"/>
+			<item value="Donation"/>
+			<item value="Ninja"/>
+			<item value="ninja"/>
+			<item value="location"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="780"/>
+		<item key="DIALOG_Y_ORIGIN" value="156"/>
+		<item key="DIALOG_WIDTH" value="414"/>
+		<item key="DIALOG_HEIGHT" value="454"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="886"/>
+		<item key="DIALOG_Y_ORIGIN" value="484"/>
+	</section>
+</section>

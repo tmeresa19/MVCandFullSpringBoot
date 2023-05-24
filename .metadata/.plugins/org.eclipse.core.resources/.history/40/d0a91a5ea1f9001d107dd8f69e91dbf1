@@ -1,0 +1,166 @@
+package com.tigist.javafinal.models;
+
+
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
+@Entity
+@Table(name="claasses")
+public class Claass {
+
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+	
+	@NotNull
+    @Size(min = 3, message ="Name is required")
+    private String claassName;
+	
+	@NotNull
+    @Size(min = 3, message ="Week Day is required")
+    private String weekDay;
+	
+	@NotNull
+	@Pattern(regexp = "^([0]?[1-9]|1[0-2]):[0-5][0-9] [AP]M$", message = "Time format should be HH:mm AM/PM")
+    private String time;
+	
+	//=================================RELATIONSHIP====================================================//
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="instructor_id")
+	private User instructor;
+
+	//=================================================================================================//
+	
+	@NotNull
+    @Size(min = 3, message ="Description is required")
+    private String description;
+	
+	@NotNull
+    @Min(value=1, message="price should be a positive number")
+    private Integer price;
+	
+	// This will not allow the createdAt column to be updated after creation
+    @Column(updatable=false)
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date createdAt;
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date updatedAt;
+    
+    
+    //================zero argument constructor=================//
+    
+    public Claass() {}
+
+    //=================CONSTRUCTOR==============================//
+    
+	public Claass(String claassName, User instructor, String description, Integer price) { //instructor of type User (but not String
+		this.claassName = claassName;
+		this.instructor = instructor;
+		this.description = description;
+		this.price = price;
+	}
+
+	
+	//==========================================GETTERS AND SETTERS======================================//
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getClaassName() {
+		return claassName;
+	}
+
+	public void setClaassName(String claassName) {
+		this.claassName = claassName;
+	}
+
+	
+	public String getWeekDay() {
+		return weekDay;
+	}
+
+	public void setWeekDay(String weekDay) {
+		this.weekDay = weekDay;
+	}
+  
+	
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
+
+	public User getInstructor() {
+		return instructor;
+	}
+
+	public void setInstructor(User instructor) {
+		this.instructor = instructor;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+    
+	  @PrePersist
+	    protected void onCreate(){
+	        this.createdAt = new Date();
+	    }
+	    @PreUpdate
+	    protected void onUpdate(){
+	        this.updatedAt = new Date();
+	    }
+}

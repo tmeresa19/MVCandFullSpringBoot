@@ -1,0 +1,102 @@
+package com.tigist.javafinal.controllers;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+
+import com.tigist.javafinal.models.Claass;
+import com.tigist.javafinal.services.ClaassService;
+
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
+@Controller
+public class ClaassController {
+
+	@Autowired
+	private ClaassService claassService;
+	
+	
+    //===================================RENDER CREATE FORM============================================//
+
+	@GetMapping("/claasses/new")
+	public String renderCreateClaassForm(@ModelAttribute("newClaass") Claass newClaass) {
+		//if I want to select instructor from a list of users in a drop down field, I need to use the following line of code:
+		//model.addAttribute("newClaass", new Claass());//this will grab all users from Service, and put it in Model model for jsp page
+		return "createClaass.jsp";
+	}
+	
+	//================================PROCESS CREATE=================================================//
+	
+	@PostMapping("/claasses/new")
+	public String processCreateClaass(@Valid @ModelAttribute("newClaass") Claass newClaass, BindingResult result) {
+		
+		if(result.hasErrors()) {
+			return "createClaass.jsp";
+		}else {
+			claassService.createClaass(newClaass);
+			return "redirect:/claasss";
+		}
+	}
+	
+	//=================================DISPLAY DASHBOARD FOR CLAASSES=================================//
+	
+	@GetMapping("/claasses")
+	public String dashboard(HttpSession session, Model model) {
+		if(session.getAttribute("userId") == null){ //helps to check after logging out, if the user's session is indeed cleared or can access the dashboard.
+			return "redirect:/";
+		}
+		model.addAttribute("claassList", claassService.allClaasss());
+		return "dashboard.jsp"; //if the user's id is found in the session(for the purpose of route protection), then display the dashboard/give access to resources
+	}
+	
+	//==================================DETAILS --DISPLAY BY ID=========================================//
+	
+	@GetMapping("/claasss/{id}")
+	public String claassDetails(@PathVariable("id")Long id, Model model) {
+		model.addAttribute("oneClaass", claassService.findOne(id));
+		return "claassDetails.jsp";
+	}
+	
+	//===================================RENDER EDIT FORM================================================//
+	
+	@GetMapping("/claasss/edit/{id}")
+	public String renderEditClaassForm(@PathVariable("id")Long id, Model model) {
+		model.addAttribute("oneClaass", claassService.findOne(id));
+		return "updateClaass.jsp";	
+	}
+	
+	
+	//==================================PROCESS EDIT AND SAVE TO DB=======================================//	
+	
+	@PutMapping("/claasss/edit/{id}")
+	public String processEditClaass(
+			@Valid @ModelAttribute("oneClaass")Claass oneClaass, 
+			BindingResult result, Model model) {
+	
+		if(result.hasErrors()) {
+			return "updateClaass.jsp"; //go back to the same edit page
+		}else {
+			claassService.updateClaass(oneClaass);
+			return "redirect:/claasses";
+	
+		}
+   }
+	
+	//===========================DELETE===============================================================//
+	
+	@DeleteMapping("/claasss/{id}")
+	public String deleteClaass(@PathVariable("id")Long id) {
+		claassService.removeClaass(id);
+		return "redirect:/claasses";
+	}
+	
+}

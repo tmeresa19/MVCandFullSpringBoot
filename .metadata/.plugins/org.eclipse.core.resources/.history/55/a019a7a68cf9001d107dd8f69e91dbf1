@@ -1,0 +1,65 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!-- c:out ; c:forEach etc. -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!-- Formatting (dates) -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<!-- form:form -->
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<!-- for rendering errors on PUT routes -->
+<%@ page isErrorPage="true"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Donation Page</title>
+<link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/main.css">
+<!-- change to match your file/naming structure -->
+<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/app.js"></script>
+<!-- change to match your file/naming structure -->
+</head>
+<body class="bg-dark text-light">
+	<div class="container mt-5">
+
+		<p>
+			<c:out value="${claassName}" />
+		</p>
+
+
+		<form:form action="/claasses/edit/${oneClaass.id }" method="PuT"
+			modelAttribute="oneClaass">
+			<form:hidden path="instructor" />
+			<!-- removed the  value="${userId }" since we want the instructor to be the same as who created. The person who edits this page can't be the donor. -->
+			<div class="form-group mb-3">
+				<form:label path="claassName">Name</form:label>
+				<form:input path="claassName" />
+				<form:errors path="claassName" class="text-danger" />
+			</div>
+
+			<div class="form-group mb-3">
+				<form:label path="weekDay">Days of Week</form:label>
+				<form:input path="weekDay" />
+				<form:errors path="weekDay" class="text-danger" />
+			</div>
+
+			<div class="form-group mb-3">
+				<form:label path="price">Drop-in Price</form:label>
+				<form:input type="number" path="price" />
+				<form:errors path="price" class="text-danger" />
+			</div>
+
+			<div class="form-group mb-3">
+				<form:label path="description">Description</form:label>
+				<form:input path="description" />
+				<form:errors path="description" class="text-danger" />
+			</div>
+
+			<button type="submit" class="btn btn-primary mb-3">Edit</button>
+
+		</form:form>
+
+	</div>
+</body>
+</html>
